@@ -1,0 +1,612 @@
+---
+title: "Examining Mode Choice For Work Commute In California"
+author: "Ruiqing Li & Yao Yao"
+output: html_document
+date: "May 3rd, 2023"
+---
+```{r libraries, include=FALSE}
+library(GGally)
+library(devtools)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(gridExtra)
+library(gt)
+library(knitr)
+library(moments)
+library(tidyverse)
+library(raster)
+library(janitor)
+library(sp)
+library(rgdal)
+library(car)
+library(showtext)
+library(readr)
+library(tidyverse)
+library(readxl)
+library(wrapr)
+library(sjPlot)
+library(sjmisc)
+library(sjlabelled)
+library(lmtest)
+```
+
+```{r}
+rm(list = ls())
+```
+
+```{r}
+getwd()
+setwd("/Users/yaoyao/Desktop/872L_Final")
+getwd()
+```
+
+INTRODUCTION
+
+Background
+
+Mode choice “is the process of determining what method of travel people will use”(Allen, 2011). Previous studies have examined commuter preferences for mode choices, such as bicycling(Wardmen et al, 2007), modes of transportation against socioeconomic factors(Commins and Nolan, 2011), or satisfaction of different modes of transportation(St-Louis et al, 2014). Other studies also examine characteristics associated with land uses, proximity to public transportation and population density in relation to mode choice(Buehler, 2011). 
+
+Research Objective
+
+Most studies focus on using survey methods to examine commuter behavior and decision making choice for one specific mode of transportation. This study investigates how the determinants of mode choice differ across three different modes of transportation. Incorporation of more than one mode of transportation allows for a comparison between the modes of transportation, given that all three modes of transportation are analyzed using the same method/model. Moreover, there are no existing studies of mode choice in California on the spatial granularity level of counties; therefore, our study offers a more detailed examination of what mode choice looks like in California. The main research questions of this study are:
+
+What is the best predictor of how much (%) of a county in California uses a mode of transportation to commute to work? 
+What are the differences and similarities in predictors for different types of transportation modes for work commute in counties in California?
+
+Understanding drivers and key determinants that influence mode of transportation decisions for commuters holds important implications for policy making. For example, states looking to decarbonize or reduce traffic congestion may be interested in shaping policy that promotes greater use of public transportation. Estimations resulting from this study can be adapted to provide recommendations for public transportation planning. Studies have also demonstrated that mode choice for commuting to work is associated with certain health benefits; for example, Tajalli and Hajbabaie observed higher probability of mental health disorders for people who work at home, relative to those who commute using other forms of transportation to work. Therefore, this study could also hold significant results that can be paired with public health studies.
+
+We predict that there will be a difference in determinants of mode choice between the three modes of transportation chosen in this study, given the disparate nature of the three modes of transportation chosen. We hypothesize that per capita income or education (% bachelor’s) will be most influential for mode choice: job functions that are able to be performed remotely are often associated with higher paying jobs, and these jobs often require a college degree. We also hypothesize that mode choices for bicycling and public transportation will be best predicted by metrics that characterize the demographics of a location/county. For example, we assume that higher percentages of people living and working in a principal city correlates with higher rates of public transportation use; and conversely, we predict that counties with higher percentages of white residents will have lower utilization rates of public transportation based on Pew Research polling (Anderson, 2016). Lastly, we hypothesize that weighted air quality index will have the least effect on mode choice, except for bicycling, given that poor air quality may disincentivize people from mode choices that require outdoor presence.
+
+METHODOLOGY 
+
+Data Collection 
+
+This study uses longitudinal data across counties in California. The state of California was chosen due to the large number of counties, thereby capturing some variation in the data collection. Secondly, California is the leading state in climate change efforts; the state has been making large strides in addressing the largest emitting sector of the state, transportation (California Energy Commission, 2022); therefore, our study can help capture trends in the sector that can be useful in future infrastructure studies aimed at transforming the transportation sector.
+The dependent variable is % population that use the following modes of transportation for commuting: (1) Public transportation, (2) Bicycle, and (3) Work from home. The three modes of transportation selected were chosen because together they represent a range in commuting distance; work from home representing zero commute distance, bicycling likely representing a smaller commute distance, and public transportation likely representing longer commute distances. The determinants/explanatory variables  investigated in this study are: air quality index, percent white population, percent bachelor’s degree, per capita income, percent living and working in a principal city, and percent population with commute travel time greater than 30 mins. 
+
+Mode choice data was gathered from Data World, air quality index from EPA, and socioeconomic characteristics from the US Census. US Census data is gathered via a two step, stratified sampling survey. First, sampling units called PSUs (primary sample units) are chosen; all PSUs are designed so that they all remain within state boundaries. Next, within each PSU the sample is further stratified into 2 stratas: one for lower income and one for higher income. Weighted air quality index from the EPA is measured by monitors that are included in EPA’s monitoring network. Weighted air quality, unlike simple average air quality, allocates more weight to the most recent measurements of air quality; this is especially important when air pollution levels are changing at a more rapid rate. Lastly, DataWorld’s measurements of mode choice were adapted from US Census Bureau data; therefore, the metric has the same sampling method as the other explanatory variables pulled from the US Census Bureau.
+
+This study acknowledges the wide land area and population variance of counties in California, which can be expected to play a role in mode choice decisions; however, the metric, percent principal city, indirectly accounts for the effect of population density.
+
+There are a total of 58 counties in California, however due to incomplete mode choice data, this study examines 42 counties in California. The missing counties not included in this study are: Alpine, Amador, Calaveras, Colusa, Del Norte, Glenn, Inyo, Lassen, Mariposa, Modoc, Mono, Napa, Plumas, San Benito, Sierra, and Yuba.
+
+DATA WRANGLING
+
+```{r}
+#Observe the dataset
+CA.transp<-read_csv("transp_CA_to_work.csv")
+```
+```{r}
+unique(CA.transp$mode)
+```
+
+```{r}
+unique(CA.transp$mode_name)
+```
+
+```{r}
+unique(CA.transp$race_eth_name)
+```
+
+
+```{r}
+unique(CA.transp$reportyear)
+```
+
+```{r}
+#Filtering for the most recent year (2008-2)
+CA.transp2 <- dplyr::filter(CA.transp, reportyear == '2008-2010')
+```
+CAtransp2, which only includes row values if the report year is 2008-2010, has a total of 11172 observations. 
+
+```{r}
+#Drop rows where the county name is "NA"
+CA.transp3 <- CA.transp2 %>% drop_na(county_name)
+```
+CAtransp3, which only includes row values if there is a county_name has a total of 11067 observations. 
+
+
+```{r}
+#Removing additional rows where our dependent variable "percent" is missing values/ NA
+CA.transp4 <- CA.transp3 %>% drop_na(percent)
+```
+CA.transp4, which only includes row values if there is both a county_name and a percent value has 1862 observations.
+
+```{r}
+#Loadinng in air quality data 
+CA.airquality<-read_csv("airquality_CA.csv")
+head(CA.airquality,5)
+```
+
+```{r}
+#Removing rows with NA from air quality datagrame
+CA.airquality2 <- CA.airquality %>% drop_na(Wgt.)
+```
+
+```{r}
+#Filtering for the 3 modes of transportation we are examining: Public Transportation, Biking, and Work from Home 
+pub.transp <- dplyr::filter(CA.transp4, mode == "PUBLICTR")
+bicycle <- dplyr::filter(CA.transp4, mode == "BICYCLE") 
+wfh <- dplyr::filter(CA.transp4, mode == "ATHOME")
+```
+
+Because we see that in the data year we are examining, there are repeating county value, meaning a single county has multiple dependent variable (percent) values, we decide to group the counties and take the average percentage. 
+
+
+```{r}
+pub.transp.agg<- aggregate(percent ~ county_name, data = pub.transp, FUN=mean)
+bicycle.agg<- aggregate(percent ~ county_name, data = bicycle, FUN=mean)
+wfh.agg<- aggregate(percent ~ county_name, data = wfh, FUN=mean)
+```
+
+```{r}
+head(CA.airquality2,3)
+head(pub.transp,2)
+```
+
+```{r}
+colnames(CA.airquality2)
+```
+
+```{r}
+#Merging
+pub.transp.aq <- merge(CA.airquality2, pub.transp.agg, by="county_name")
+bicycle.aq <- merge(CA.airquality2, bicycle.agg, by= "county_name")
+wfh.aq <- merge(CA.airquality2, wfh.agg, by= "county_name")
+
+```
+
+```{r}
+pub.transp.aq
+```
+
+
+us.census dataframe
+Source of data: IPUMS NHGIS
+Relevant column names from the codebook
+(1) Total population: QSQE001
+(2) White alone: QSQE002
+(3) Place of work (Living in a principal city) :QS9E002
+(4) Education attainment: QUSE022 (Bachelor's degree)
+(5) Per capita income:QWUE001
+(6) Travel time to work: Workers 16 years and over who did not work at home
+
+QTHE008:30 to 34 minutes
+QTHE009:35 to 39 minutes
+QTHE010:40 to 44 minutes
+QTHE011:45 to 59 minutes
+QTHE012:60 to 89 minutes
+QTHE013:90 or more minutes
+
+
+```{r}
+#Loading in Explanatory variables (Education, Travel Time, and Median Household Income)
+
+us.census <- read.csv("nhgis0010_ds191_20125_county.csv")
+
+#Filter for only counties in California
+us.census.ca<- dplyr::filter(us.census, STATE == "California")
+```
+
+
+```{r}
+#Filter for only the variables we are interested see above
+us.census.ca <-us.census.ca %>% dplyr:: select(QSQE001,QSQE002,QS9E002,QUSE022,QWUE001,QTHE008,QTHE009,QTHE010,QTHE011,QTHE012,QTHE013, COUNTY)
+
+```
+
+
+```{r}
+#Sum up travel times 30 minutes and up to become one column
+us.census.ca$tt.30.plus <- us.census.ca$QTHE008+ us.census.ca$QTHE009+ us.census.ca$QTHE010+ us.census.ca$QTHE011+ us.census.ca$QTHE012+ us.census.ca$QTHE013
+
+
+#Then we calculate the percentages
+us.census.ca$edu.percent <- us.census.ca$QUSE022/us.census.ca$QSQE001*100
+us.census.ca$tt.30.plus.percent <- us.census.ca$tt.30.plus/us.census.ca$QSQE001*100
+us.census.ca$principle.city.percent <- us.census.ca$QS9E002/us.census.ca$QSQE001*100
+us.census.ca$white.percent <- us.census.ca$QSQE002/us.census.ca$QSQE001*100
+
+#rename per capital income column 
+us.census.ca <- us.census.ca %>% rename(per.cap.income = QWUE001) 
+head(us.census.ca,3)
+
+```
+
+```{r}
+#Selecting only columns of interest from 
+us.census.ca <- us.census.ca %>% dplyr:: select (per.cap.income, edu.percent, tt.30.plus.percent, white.percent, principle.city.percent, COUNTY)
+```
+
+
+```{r}
+#Remove "County" under COUNTY columns in census data to allow for merging
+us.census.ca$COUNTY <- gsub(" County","",as.character(us.census.ca$COUNTY))
+us.census.ca <-rename(us.census.ca,county_name = COUNTY)
+```
+
+```{r}
+#Drop extra terms in the air-quality data and mutate variables to numeric
+pub.transp.aq <- pub.transp.aq %>% dplyr:: select(Wgt., percent, county_name) %>% mutate(Wgt. = as.numeric(Wgt.), percent = as.numeric(percent)) 
+bicycle.aq <- bicycle.aq %>% dplyr:: select(Wgt., percent, county_name) %>% mutate(Wgt. = as.numeric(Wgt.), percent = as.numeric(percent)) 
+wfh.aq <- wfh.aq %>% dplyr:: select(Wgt., percent, county_name) %>% mutate(Wgt. = as.numeric(Wgt.), percent = as.numeric(percent)) 
+```
+
+
+```{r}
+#Merge census tract data with previously merged weather and transportation data 
+pub.transp.aq.census<- merge(pub.transp.aq, us.census.ca, by="county_name")
+bicycle.aq.census<- merge(bicycle.aq, us.census.ca, by="county_name")
+wfh.aq.census <- merge(wfh.aq, us.census.ca, by="county_name")
+```
+
+DESCRIPTIVE STATISTICS
+Explanatory Variables
+
+Since all three models utilize the same set of explanatory variables, we decided to make two tables which target the explanatory variables and the dependent variables respectively. There are 42 observations for all explanatory variables (Appendix A Figure 1). % of bachelor degree has a mean and median of 11 with a slight right skewness. All explanatory variables are right skewed except from the percent white residents. Per capita income has a mean of $28,000 and a big standard deviation of 8,600. The percentage of people living or working in a principal city has a mean of 16 and a standard deviation of 11. % of  commute time longer than 30 mins has a mean of 13 and a standard deviation of 4.6. Weighted average of the air quality index has a mean of 25 with a relatively small median of 13. The standard deviation is relatively big – 35 – when compared to its mean. Percent of white residents has a mean of 73 and a standard deviation of 12. 
+
+
+```{r}
+#Select all the explanatory variables
+explanatory<- pub.transp.aq.census %>% dplyr::select(edu.percent,per.cap.income,principle.city.percent,tt.30.plus.percent, Wgt.,white.percent, county_name)
+
+```
+
+```{r}
+#Summary Statistics Table for All Explanatory Variables
+explanatory.long.df <- explanatory%>%
+  tidyr::pivot_longer(cols = -c(county_name), names_to="variable", values_to="value")
+```
+
+```{r}
+summary.table.exp <- explanatory.long.df %>% group_by(variable) %>% 
+  dplyr::summarize(
+            obs=length(value[!is.na(value)]),
+            mean=round(mean(value, na.rm=TRUE),3),
+            median=round(median(value, na.rm=TRUE),3),
+            sd=round(sd(value, na.rm=TRUE), 3),
+             skew = round(skewness(value, na.rm=TRUE), 3),
+             IQR = round(IQR(value, na.rm=TRUE), 3))
+head(summary.table.exp, 10)
+
+```
+
+```{r}
+summary.table.exp <- summary.table.exp %>% 
+mutate(variable = dplyr:: recode(variable, edu.percent = "Bachelor's Degree (%)", per.cap.income = "Per Capita Income", principle.city.percent = "Living in a principal city（%）", tt.30.plus.percent = "Commute Time Longer than 30 mins (%)", Wgt. = "Weighted Average of Air Quality Index", white.percent = "Percent White Residents (%)"))
+
+summary.table.exp
+```
+
+```{r}
+
+summary.table.exp.clean <- summary.table.exp %>%
+gt() %>%
+
+  tab_options(
+    table.width = pct(95)
+  )%>%
+  
+  cols_width(
+    c(variable)~ px(200),
+    everything() ~ px(120))%>%
+  
+  tab_header(
+    title = md("Summary Statistics for Explanatory Variables"))%>%
+    
+  
+  fmt_passthrough (columns=c(variable)) %>%
+  fmt_number(columns=c(obs), decimals=0)%>%
+  fmt_number(
+    columns = 3:7,
+    rows = all(),
+    n_sigfig = 3,
+    sep_mark = ",")%>%
+  
+
+  cols_label(variable="Variable",
+    obs = "Observations",
+    mean = "Mean",
+    median="Median",
+    sd = "Standard Deviation",
+    skew = "Skewness",
+    IQR = "IQR")
+
+
+summary.table.exp.clean
+```
+
+Dependent Variables
+
+For the dependent variables, they are all right skewed and % of bicycles as the transportation to work has the most right skewness (Appendix A Figure 2). % of work at home has the largest mean - 4.7 - and a standard deviation of 2.0.  % of bicycles as the transportation to work has a mean of 1.0 and a standard deviation of 1.7. % of public transportation as the transportation to work has a mean of 4.0 and a very large standard deviation of 4.4.
+
+
+```{r}
+#Select all the dependent variables
+dependent <- dplyr::filter(CA.transp4, mode == "PUBLICTR" | mode == "BICYCLE" | mode == "ATHOME") %>% dplyr:: select(percent, mode)
+dependent
+```
+
+
+```{r}
+#Summary Statistics Table for Dependent Variables
+
+dependent.long.df <- dependent%>%
+  tidyr::pivot_longer(cols = -c(mode), names_to="variable", values_to="value")
+dependent.long.df
+```
+
+```{r}
+summary.table.dependent <- dependent.long.df %>% group_by(mode) %>% 
+  dplyr::summarize(
+            obs=length(value[!is.na(value)]),
+            mean=round(mean(value, na.rm=TRUE),3),
+            median=round(median(value, na.rm=TRUE),3),
+            sd=round(sd(value, na.rm=TRUE), 3),
+             skew = round(skewness(value, na.rm=TRUE), 3),
+             IQR = round(IQR(value, na.rm=TRUE), 3))
+head(summary.table.dependent, 10)
+
+```
+```{r}
+summary.table.dependent <- summary.table.dependent %>% 
+mutate(mode = dplyr:: recode(mode,ATHOME = "Work At Home (%)", BICYCLE = "Bicycle as the Transportation to Work (%)", PUBLICTR = "Public Transportation as the Transportation to Work (%)"))
+summary.table.dependent
+```
+
+
+```{r}
+summary.table.dependent.clean <- summary.table.dependent %>%
+gt() %>%
+
+  tab_options(
+    table.width = pct(95)
+  )%>%
+  
+  cols_width(
+    c(mode)~ px(200),
+    everything() ~ px(120))%>%
+  
+  tab_header(
+    title = md("Summary Statistics for Dependent Variables"))%>%
+    
+  
+  fmt_passthrough (columns=c(mode)) %>%
+  fmt_number(columns=c(obs), decimals=0)%>%
+  fmt_number(
+    columns = 3:7,
+    rows = all(),
+    n_sigfig = 3,
+    sep_mark = ",")%>%
+  
+
+  cols_label(mode="Mode",
+    obs = "Observations",
+    mean = "Mean",
+    median="Median",
+    sd = "Standard Deviation",
+    skew = "Skewness",
+    IQR = "IQR")
+
+
+summary.table.dependent.clean
+
+```
+```{r}
+pub.transp.aq.census
+```
+
+EXPLORATORY ANALYSIS
+
+Scatterplots
+Before we created our data models, we produced scatterplot matrices (Appendix A Figures 3-5) to visualize our data and inform necessary data transformations. We found that certain variables are concentrated on the x or y axis and decided  to perform  log transformation on them. Our public transportation model uses log transformed % population that uses public transportation and weighted average air quality index; our bicycle model uses log transformed % population that uses bicycles, and weighted average air quality index; and our work from home model uses log transformed weighted average air quality index. After log transformation, the scatterplots show that all variables are  distributed without concentration on a certain axis (Appendix A Figures 6-8)
+
+
+```{r}
+#Scatterplot and Correlationplot for Public Transportation mode
+
+columns.select<-c(2,4,5,6,7,8,3)
+ggpairs(pub.transp.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+
+pub.transp.aq.census_select<-pub.transp.aq.census%>% dplyr:: select(c(2,4,5,6,7,8,3))
+cor1 <- cor(pub.transp.aq.census_select)
+
+library(corrplot)
+corrplot(cor1, method = "ellipse")
+corrplot.mixed(cor1, upper = "ellipse")
+```
+
+```{r}
+#Scatterplot and Correlationplot for bycicle transportation mode
+columns.select<-c(2,4,5,6,7,8,3)
+ggpairs(bicycle.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+
+bicycle.aq.census_select<-bicycle.aq.census%>% dplyr:: select(c(2,4,5,6,7,8,3))
+cor2 <- cor(bicycle.aq.census_select)
+
+library(corrplot)
+corrplot(cor2, method = "ellipse")
+corrplot.mixed(cor2, upper = "ellipse")
+```
+
+```{r}
+#Scatterplot and Correlationplot for bWork At Home mode
+columns.select<-c(2,4,5,6,7,8,3)
+ggpairs(wfh.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+
+wfh.aq.census_select<-wfh.aq.census%>% dplyr:: select(c(2,4,5,6,7,8,3))
+cor3 <- cor(wfh.aq.census_select)
+
+library(corrplot)
+corrplot(cor3, method = "ellipse")
+corrplot.mixed(cor3, upper = "ellipse")
+```
+
+From the scatterplot, the Wgt. variable for each mode of transportation (explanatory) and percentage of Public Transportation and Bicycle mode (dependent) should be logged to get a better result.
+
+```{r}
+#Transformation
+pub.transp.aq.census$log.percent <- log(pub.transp.aq.census$percent)
+pub.transp.aq.census$log.Wgt. <- log(pub.transp.aq.census$Wgt.)
+
+bicycle.aq.census$log.percent <- log(bicycle.aq.census$percent)
+bicycle.aq.census$log.Wgt. <- log(bicycle.aq.census$Wgt.)
+
+wfh.aq.census$log.Wgt. <- log(wfh.aq.census$Wgt.)
+pub.transp.aq.census
+```
+
+```{r}
+#New Scatterplot for Public Transportation mode after Wgt. and percentage log transformation
+columns.select<-c(4,5,6,7,8,10,9)
+ggpairs(pub.transp.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+```
+
+```{r}
+#New Scatterplot for bycicle transportation mode after Wgt. and percentage log transformation
+columns.select<-c(4,5,6,7,8,10,9)
+ggpairs(bicycle.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+```
+```{r}
+#New Scatterplot for Work At Home mode after Wgt. transformation
+columns.select<-c(4,5,6,7,8,9,3)
+ggpairs(wfh.aq.census, columns = columns.select, title = "",  axisLabels = "show")
+
+```
+
+
+ANALYSIS & VISUALIZATIONS
+```{r}
+#Initial Public Transportation Model
+is.na(pub.transp.aq.census)<-sapply(pub.transp.aq.census, is.infinite) #Change infinite to NA, otherwise the linear regression doesn't work
+
+model.pub.transport <-lm(formula = log.percent ~ edu.percent + per.cap.income + principle.city.percent + tt.30.plus.percent + log.Wgt. + white.percent, data = pub.transp.aq.census, na.action = na.exclude)
+
+tab_model(model.pub.transport,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)", "Per Capita Income", "Living in Principal City (%)", "Commute Time Longer than 30 Minutes (%)", "Weighted Air Quality Index", "Percent White Residents (%)"),
+  dv.labels = c("First Public Transportation Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+
+plot(model.pub.transport)
+```
+
+```{r}
+#AIC
+step(model.pub.transport)
+```
+```{r}
+#New Model after AIC
+new.model.pub.transport<-lm(formula = log.percent ~ edu.percent + log.Wgt. + white.percent, 
+    data = pub.transp.aq.census, na.action = na.exclude)
+
+tab_model(new.model.pub.transport,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)", "Weighted Air Quality Index", "Percent White Residents (%)"),
+  dv.labels = c("Second Public Transportation Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+plot(new.model.pub.transport)
+```
+
+
+```{r}
+#Initial Bicycle Model
+is.na(bicycle.aq.census)<-sapply(bicycle.aq.census, is.infinite)
+
+model.bicycle <- lm(formula = log.percent ~ edu.percent + per.cap.income + principle.city.percent + tt.30.plus.percent + log.Wgt. + white.percent, data = bicycle.aq.census, na.action = na.exclude)
+
+tab_model(model.bicycle,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)", "Per Capita Income", "Living in Principal City (%)", "Commute Time Longer than 30 Minutes (%)", "Weighted Air Quality Index", "Percent White Residents (%)"),
+  dv.labels = c("First Bicycle Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+plot(model.bicycle)
+```
+
+```{r}
+#AIC
+step(model.bicycle)
+```
+```{r}
+#New Model after AIC
+new.model.bicycle<-lm(formula = log.percent ~ edu.percent + tt.30.plus.percent + 
+    log.Wgt. + white.percent, data = bicycle.aq.census, na.action = na.exclude)
+
+tab_model(new.model.bicycle,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)", "Commute Time Longer than 30 Minutes (%)", "Weighted Air Quality Index", "Percent White Residents (%)"),
+  dv.labels = c("Second Bicycle Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+plot(new.model.bicycle)
+```
+
+
+```{r}
+#Work At Home Model
+is.na(wfh.aq.census)<-sapply(wfh.aq.census, is.infinite)
+wfh.aq.census.1<-drop_na(wfh.aq.census)
+model.wfh <- lm(formula = percent ~ edu.percent + per.cap.income + principle.city.percent + tt.30.plus.percent + log.Wgt. + white.percent, data = wfh.aq.census.1, na.action = na.exclude)
+
+tab_model(model.wfh,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)", "Per Capita Income", "Living in Principal City (%)", "Commute Time Longer than 30 Minutes (%)", "Weighted Air Quality Index", "Percent White Residents (%)"),
+  dv.labels = c("First Work From Home Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+plot(model.wfh)
+```
+
+```{r}
+#AIC
+step(model.wfh)
+```
+```{r}
+#New Model after AIC
+new.model.wfh<-lm(formula = percent ~ edu.percent + per.cap.income + principle.city.percent + 
+    white.percent, data = wfh.aq.census.1, na.action = na.exclude)
+
+tab_model(new.model.wfh,
+          pred.labels = c("Intercept", "Bachelor's Degree (%)","Per Capita Income", "Living in Principal City (%)", "Percent White Residents (%)"),
+  dv.labels = c("Second Work From Home Model"),
+  string.pred = "Predictors",
+  string.ci = "CI (95%)",
+  string.p = "P-Value")
+plot(new.model.wfh)
+```
+SUMMARY and RESULTS
+
+We developed ordinary least squares linear regression models to test the impact of each indicator on the percentage of California commuters across three mode choices—public transportation, bicycling, and working from home. Our final models for public transportation and bicycle utilization, found in Appendix B Figure 43 and replicated in the table below, indicate that there are different predictors of mode choice at the county-level in California. Public transportation use was best predicted by a county’s percentage of white residents and to a lesser extent, air quality; whereas bicycle use was best predicted by travel time to work. Other predictors were found to be statistically insignificant. Moreover, our working from home model did not meet the zero conditional means assumption of OLS regressions (Appendix B Figure 41) and was therefore disregarded in reporting our final findings.
+Final Models for Public Transportation and Bicycle Mode Choices
+
+
+Given that we included percentage data and log-transformed our air quality index, we interpret each model in terms of percentage changes in both variables. Holding all else constant, we predict that a 10% increase in white residents corresponds with a -0.4 % decrease in the percentage of public transportation usage at the county-level in California. We also predict that a 10% increase in the weighted average air quality index will result in a 1.7% decrease in the percentage of  public transportation as a mode choice in California counties.
+For our bicycle model, we predict that a 10% increase in commute time over 30 minutes will result in a decrease of percentage of bicycle mode choice by 1.2%, holding all other variables in our model as constant.
+Our model for public transportation yielded a multiple R-squared value of 0.607 and an adjusted R-squared value of 0.53, indicating that changes in our response variable can be moderately explained by our explanatory variables. Our bicycle model had a comparatively lower R-squared value (0.31) and an even lower adjusted R-squared value of 0.182, indicating that our explanatory variables only capture 18.2% of the change in the percentage of commuters who choose to use a bicycle. Our public transportation model has a strong statistical chance of fitting our response variable better than just our slope coefficient (p<.001, F-statistic=8.34) (Appendix B Figure 44). Whereas our bicycle model was not as robust and its explanatory variables do not fully meet our assumption of performing better than the slope coefficient of the model (p=.06, F-statistic =2.42) (Appendix B Figure 44). That said, one of our two research questions was to investigate similar explanatory variables between mode choices. So we left the predictor variables in our bicycle model as is.
+
+
+
+
+DISCUSSION
+
+Conclusion
+
+We assumed that the demographic composition of California counties, represented by percent white residents, would affect public transportation adoption. We also assumed that shorter commutes would be associated with bicycle usage. Our model results were congruent with these assumptions. However, our results do not fully match our other predictions. We assumed that worse air quality, indicated by high scores on our selected air quality index, would reduce bicycle commuting. Our results indicate that air quality is not a significant predictor for bicycling, but rather, dissuades people from using public transportation.
+We also found it surprising that the percentage of people living or working in principal cities was not statistically significant in either model. We originally selected that variable as a creative way to account for population density and proximity to high quality transit infrastructure, and assumed based on our literature review that it would be significant to our models; though that assumption was ultimately moot.
+
+Limitations
+
+While we uncovered statistically significant findings for variables influencing transportation mode choice at the county level in California, the small coefficients of our betas indicate that there are likely more powerful drivers of public transportation beyond our selected predictor variables. This suggests the presence of omitted variable bias, particularly in our bicycle model which had a low adjusted R-squared value of 0.18.
+This study was not able to examine all variables or factors that have been demonstrated in literature to affect mode choice, for example, cost of each mode of transportation or infrastructure built to promote each mode of transit. Our study design was limited to data available on the county level in California. Integrating additional variables, like cost of mode choice, would require additional field data collection.
+
+As we touched on in our assumptions section, it is also likely that our results reflect spatial autocorrelation of observations. Counties in California share borders with one another, and commuters in different counties can be especially close near cities such as Los Angeles or San Francisco. It is therefore likely that some of our results for public transportation and bicycling, which are both assumed to be higher modality choices in cities, have some spatial interactions with one another.
+
+Application of Findings and Future Direction
+
+This study is limited to California counties and examines them at one snapshot in time. Future studies can incorporate panel data that will allow for investigations into how determinants may change over time. To expand the geographic inference of this study, we recommend that the same study design be replicated across other states.
+
+In light of the recent COVID-19 pandemic, it may also be interesting to conduct a more specific examination of determinants of the mode choice: “work from home” pre 2020 and post 2020. This comparison could potentially reveal how what we think are the strongest determinants of mode choice may no longer be salient in a post COVID work environment. 
