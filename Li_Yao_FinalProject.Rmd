@@ -32,6 +32,7 @@ library(lmtest)
 ```
 
 # Table of Contents
+
 1. **[INTRODUCTION](#introduction)**
     
     1.1 [Background](#subparagraph1)
@@ -61,6 +62,7 @@ library(lmtest)
     
     5.2 [Limitations](#subparagraph10)
 
+\newpage
 
 ```{r}
 rm(list = ls())
