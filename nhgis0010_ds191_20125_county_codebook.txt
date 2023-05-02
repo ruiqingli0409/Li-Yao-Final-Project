@@ -1,0 +1,351 @@
+--------------------------------------------------------------------------------
+Codebook for NHGIS data file 'nhgis0010_ds191_20125_county'
+--------------------------------------------------------------------------------
+ 
+Contents
+    - Data Summary
+    - Data Dictionary
+    - Citation and Use
+ 
+Additional documentation on NHGIS data sources is available at: 
+    https://www.nhgis.org/documentation/tabular-data 
+ 
+--------------------------------------------------------------------------------
+Data Summary
+--------------------------------------------------------------------------------
+ 
+Year:             2008-2012
+Geographic level: County (by State)
+Dataset:          2012 American Community Survey: 5-Year Data [2008-2012, Block Groups & Larger Areas]
+   NHGIS code:    2008_2012_ACS5a
+   NHGIS ID:      ds191
+Breakdown(s):     Geographic Subarea:
+                     Total area (00)
+Data type(s):     (E) Estimates
+                  (M) Margins of error
+ 
+Tables:
+ 
+1. Race
+   Universe:    Total population
+   Source code: B02001
+   NHGIS code:  QSQ
+ 
+2. Place of Work for Workers 16 Years and Over--Metropolitan Statistical Area Level
+   Universe:    Workers 16 years and over living in a Metropolitan Statistical Area
+   Source code: B08016
+   NHGIS code:  QS9
+ 
+3. Travel Time to Work
+   Universe:    Workers 16 years and over who did not work at home
+   Source code: B08303
+   NHGIS code:  QTH
+ 
+4. Educational Attainment for the Population 25 Years and Over
+   Universe:    Population 25 years and over
+   Source code: B15003
+   NHGIS code:  QUS
+ 
+5. Per Capita Income in the Past 12 Months (in 2012 Inflation-Adjusted Dollars)
+   Universe:    Total population
+   Source code: B19301
+   NHGIS code:  QWU
+ 
+--------------------------------------------------------------------------------
+Data Dictionary
+--------------------------------------------------------------------------------
+ 
+Context Fields 
+        GISJOIN:     GIS Join Match Code
+        YEAR:        Data File Year
+        STUSAB:      State Postal Abbreviation
+        REGIONA:     Region Code
+        DIVISIONA:   Division Code
+        STATE:       State Name
+        STATEA:      State Code
+        COUNTY:      County Name
+        COUNTYA:     County Code
+        COUSUBA:     County Subdivision Code
+        PLACEA:      Place Code
+        TRACTA:      Census Tract Code
+        BLKGRPA:     Block Group Code
+        CONCITA:     Consolidated City Code
+        AIANHHA:     American Indian Area/Alaska Native Area/Hawaiian Home Land Code
+        RES_ONLYA:   American Indian Area/Alaska Native Area (Reservation or Statistical Entity Only) Code
+        TRUSTA:      American Indian Area (Off-Reservation Trust Land Only)/Hawaiian Home Land Code
+        AIHHTLI:     American Indian Trust Land/ Hawaiian Home Land Indicator
+        AITSCEA:     Tribal Subdivision/Remainder Code
+        ANRCA:       Alaska Native Regional Corporation Code
+        CBSAA:       Metropolitan Statistical Area/Micropolitan Statistical Area Code
+        CSAA:        Combined Statistical Area Code
+        METDIVA:     Metropolitan Division Code
+        MEMI:        Metropolitan/Micropolitan Indicator Flag
+        NECTAA:      New England City and Town Area Code
+        CNECTAA:     Combined New England City and Town Area Code
+        NECTADIVA:   New England City and Town Area Division Code
+        UAA:         Urban Area Code
+        CDCURRA:     Congressional District (2013-2015, 113th Congress) Code
+        SLDUA:       State Legislative District (Upper Chamber) Code
+        SLDLA:       State Legislative District (Lower Chamber) Code
+        ZCTA5A:      5-Digit ZIP Code Tabulation Area Code
+        SUBMCDA:     Subminor Civil Division Code
+        SDELMA:      School District (Elementary)/Remainder Code
+        SDSECA:      School District (Secondary)/Remainder Code
+        SDUNIA:      School District (Unified)/Remainder Code
+        PCI:         Principal City Indicator
+        PUMAA:       Public Use Microdata Area Code
+        GEOID:       Geographic Identifier
+        BTTRA:       Tribal Census Tract Code
+        BTBGA:       Tribal Block Group Code
+ 
+Data Type (E):
+    Estimates
+ 
+        NAME_E:      Area Name
+ 
+    Table 1:     Race
+    Universe:    Total population
+    Source code: B02001
+    NHGIS code:  QSQ
+        QSQE001:     Total
+        QSQE002:     White alone
+        QSQE003:     Black or African American alone
+        QSQE004:     American Indian and Alaska Native alone
+        QSQE005:     Asian alone
+        QSQE006:     Native Hawaiian and Other Pacific Islander alone
+        QSQE007:     Some other race alone
+        QSQE008:     Two or more races
+        QSQE009:     Two or more races: Two races including Some other race
+        QSQE010:     Two or more races: Two races excluding Some other race, and three or more races
+ 
+    Table 2:     Place of Work for Workers 16 Years and Over--Metropolitan Statistical Area Level
+    Universe:    Workers 16 years and over living in a Metropolitan Statistical Area
+    Source code: B08016
+    NHGIS code:  QS9
+        QS9E001:     Total
+        QS9E002:     Living in a principal city
+        QS9E003:     Living in a principal city: Worked in Metropolitan Statistical Area of residence
+        QS9E004:     Living in a principal city: Worked in Metropolitan Statistical Area of residence: Worked in a principal city
+        QS9E005:     Living in a principal city: Worked in Metropolitan Statistical Area of residence: Worked outside any principal city
+        QS9E006:     Living in a principal city: Worked in a different Metropolitan Statistical Area
+        QS9E007:     Living in a principal city: Worked in a different Metropolitan Statistical Area: Worked in a principal city
+        QS9E008:     Living in a principal city: Worked in a different Metropolitan Statistical Area: Worked outside any principal city
+        QS9E009:     Living in a principal city: Worked in a Micropolitan Statistical Area
+        QS9E010:     Living in a principal city: Worked in a Micropolitan Statistical Area: Worked in a principal city
+        QS9E011:     Living in a principal city: Worked in a Micropolitan Statistical Area: Worked outside any principal city
+        QS9E012:     Living in a principal city: Worked outside any Metropolitan or Micropolitan Statistical Area
+        QS9E013:     Living outside any principal city
+        QS9E014:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence
+        QS9E015:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence: Worked in a principal city
+        QS9E016:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence: Worked outside any principal city
+        QS9E017:     Living outside any principal city: Worked in a different Metropolitan Statistical Area
+        QS9E018:     Living outside any principal city: Worked in a different Metropolitan Statistical Area: Worked in a principal city
+        QS9E019:     Living outside any principal city: Worked in a different Metropolitan Statistical Area: Worked outside any principal city
+        QS9E020:     Living outside any principal city: Worked in a Micropolitan Statistical Area
+        QS9E021:     Living outside any principal city: Worked in a Micropolitan Statistical Area: Worked in a principal city
+        QS9E022:     Living outside any principal city: Worked in a Micropolitan Statistical Area: Worked outside any principal city
+        QS9E023:     Living outside any principal city: Worked outside any Metropolitan or Micropolitan Statistical Area
+ 
+    Table 3:     Travel Time to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08303
+    NHGIS code:  QTH
+        QTHE001:     Total
+        QTHE002:     Less than 5 minutes
+        QTHE003:     5 to 9 minutes
+        QTHE004:     10 to 14 minutes
+        QTHE005:     15 to 19 minutes
+        QTHE006:     20 to 24 minutes
+        QTHE007:     25 to 29 minutes
+        QTHE008:     30 to 34 minutes
+        QTHE009:     35 to 39 minutes
+        QTHE010:     40 to 44 minutes
+        QTHE011:     45 to 59 minutes
+        QTHE012:     60 to 89 minutes
+        QTHE013:     90 or more minutes
+ 
+    Table 4:     Educational Attainment for the Population 25 Years and Over
+    Universe:    Population 25 years and over
+    Source code: B15003
+    NHGIS code:  QUS
+        QUSE001:     Total
+        QUSE002:     No schooling completed
+        QUSE003:     Nursery school
+        QUSE004:     Kindergarten
+        QUSE005:     1st grade
+        QUSE006:     2nd grade
+        QUSE007:     3rd grade
+        QUSE008:     4th grade
+        QUSE009:     5th grade
+        QUSE010:     6th grade
+        QUSE011:     7th grade
+        QUSE012:     8th grade
+        QUSE013:     9th grade
+        QUSE014:     10th grade
+        QUSE015:     11th grade
+        QUSE016:     12th grade, no diploma
+        QUSE017:     Regular high school diploma
+        QUSE018:     GED or alternative credential
+        QUSE019:     Some college, less than 1 year
+        QUSE020:     Some college, 1 or more years, no degree
+        QUSE021:     Associate's degree
+        QUSE022:     Bachelor's degree
+        QUSE023:     Master's degree
+        QUSE024:     Professional school degree
+        QUSE025:     Doctorate degree
+ 
+    Table 5:     Per Capita Income in the Past 12 Months (in 2012 Inflation-Adjusted Dollars)
+    Universe:    Total population
+    Source code: B19301
+    NHGIS code:  QWU
+        QWUE001:     Per capita income in the past 12 months (in 2012 inflation-adjusted dollars)
+ 
+Data Type (M):
+    Margins of error
+ 
+        NAME_M:      Area Name
+ 
+    Table 1:     Race
+    Universe:    Total population
+    Source code: B02001
+    NHGIS code:  QSQ
+        QSQM001:     Total
+        QSQM002:     White alone
+        QSQM003:     Black or African American alone
+        QSQM004:     American Indian and Alaska Native alone
+        QSQM005:     Asian alone
+        QSQM006:     Native Hawaiian and Other Pacific Islander alone
+        QSQM007:     Some other race alone
+        QSQM008:     Two or more races
+        QSQM009:     Two or more races: Two races including Some other race
+        QSQM010:     Two or more races: Two races excluding Some other race, and three or more races
+ 
+    Table 2:     Place of Work for Workers 16 Years and Over--Metropolitan Statistical Area Level
+    Universe:    Workers 16 years and over living in a Metropolitan Statistical Area
+    Source code: B08016
+    NHGIS code:  QS9
+        QS9M001:     Total
+        QS9M002:     Living in a principal city
+        QS9M003:     Living in a principal city: Worked in Metropolitan Statistical Area of residence
+        QS9M004:     Living in a principal city: Worked in Metropolitan Statistical Area of residence: Worked in a principal city
+        QS9M005:     Living in a principal city: Worked in Metropolitan Statistical Area of residence: Worked outside any principal city
+        QS9M006:     Living in a principal city: Worked in a different Metropolitan Statistical Area
+        QS9M007:     Living in a principal city: Worked in a different Metropolitan Statistical Area: Worked in a principal city
+        QS9M008:     Living in a principal city: Worked in a different Metropolitan Statistical Area: Worked outside any principal city
+        QS9M009:     Living in a principal city: Worked in a Micropolitan Statistical Area
+        QS9M010:     Living in a principal city: Worked in a Micropolitan Statistical Area: Worked in a principal city
+        QS9M011:     Living in a principal city: Worked in a Micropolitan Statistical Area: Worked outside any principal city
+        QS9M012:     Living in a principal city: Worked outside any Metropolitan or Micropolitan Statistical Area
+        QS9M013:     Living outside any principal city
+        QS9M014:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence
+        QS9M015:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence: Worked in a principal city
+        QS9M016:     Living outside any principal city: Worked in Metropolitan Statistical Area of residence: Worked outside any principal city
+        QS9M017:     Living outside any principal city: Worked in a different Metropolitan Statistical Area
+        QS9M018:     Living outside any principal city: Worked in a different Metropolitan Statistical Area: Worked in a principal city
+        QS9M019:     Living outside any principal city: Worked in a different Metropolitan Statistical Area: Worked outside any principal city
+        QS9M020:     Living outside any principal city: Worked in a Micropolitan Statistical Area
+        QS9M021:     Living outside any principal city: Worked in a Micropolitan Statistical Area: Worked in a principal city
+        QS9M022:     Living outside any principal city: Worked in a Micropolitan Statistical Area: Worked outside any principal city
+        QS9M023:     Living outside any principal city: Worked outside any Metropolitan or Micropolitan Statistical Area
+ 
+    Table 3:     Travel Time to Work
+    Universe:    Workers 16 years and over who did not work at home
+    Source code: B08303
+    NHGIS code:  QTH
+        QTHM001:     Total
+        QTHM002:     Less than 5 minutes
+        QTHM003:     5 to 9 minutes
+        QTHM004:     10 to 14 minutes
+        QTHM005:     15 to 19 minutes
+        QTHM006:     20 to 24 minutes
+        QTHM007:     25 to 29 minutes
+        QTHM008:     30 to 34 minutes
+        QTHM009:     35 to 39 minutes
+        QTHM010:     40 to 44 minutes
+        QTHM011:     45 to 59 minutes
+        QTHM012:     60 to 89 minutes
+        QTHM013:     90 or more minutes
+ 
+    Table 4:     Educational Attainment for the Population 25 Years and Over
+    Universe:    Population 25 years and over
+    Source code: B15003
+    NHGIS code:  QUS
+        QUSM001:     Total
+        QUSM002:     No schooling completed
+        QUSM003:     Nursery school
+        QUSM004:     Kindergarten
+        QUSM005:     1st grade
+        QUSM006:     2nd grade
+        QUSM007:     3rd grade
+        QUSM008:     4th grade
+        QUSM009:     5th grade
+        QUSM010:     6th grade
+        QUSM011:     7th grade
+        QUSM012:     8th grade
+        QUSM013:     9th grade
+        QUSM014:     10th grade
+        QUSM015:     11th grade
+        QUSM016:     12th grade, no diploma
+        QUSM017:     Regular high school diploma
+        QUSM018:     GED or alternative credential
+        QUSM019:     Some college, less than 1 year
+        QUSM020:     Some college, 1 or more years, no degree
+        QUSM021:     Associate's degree
+        QUSM022:     Bachelor's degree
+        QUSM023:     Master's degree
+        QUSM024:     Professional school degree
+        QUSM025:     Doctorate degree
+ 
+    Table 5:     Per Capita Income in the Past 12 Months (in 2012 Inflation-Adjusted Dollars)
+    Universe:    Total population
+    Source code: B19301
+    NHGIS code:  QWU
+        QWUM001:     Per capita income in the past 12 months (in 2012 inflation-adjusted dollars)
+ 
+--------------------------------------------------------------------------------
+Citation and Use of NHGIS Data
+--------------------------------------------------------------------------------
+ 
+All persons are granted a limited license to use this documentation and the
+accompanying data, subject to the following conditions:
+
+* REDISTRIBUTION: You will not redistribute the data without permission.
+
+  You may publish a subset of the data to meet journal requirements for accessing 
+  data related to a particular publication. Contact us for permission for any other 
+  redistribution; we will consider requests for free and commercial redistribution.
+
+* CITATION: You will cite NHGIS appropriately.
+
+    * Publications and research reports employing NHGIS data (either tabular or GIS) 
+      should include the following citation:
+
+        Steven Manson, Jonathan Schroeder, David Van Riper, Tracy Kugler, and Steven Ruggles. 
+        IPUMS National Historical Geographic Information System: Version 17.0 
+        [dataset]. Minneapolis, MN: IPUMS. 2022. 
+        http://doi.org/10.18128/D050.V17.0
+
+    * For policy briefs, online resources, or articles in the popular press, we 
+      recommend that you cite the use of NHGIS data as follows:
+
+        IPUMS NHGIS, University of Minnesota, www.nhgis.org.
+
+These terms of use are a legally binding agreement. You can use the data only in 
+accordance with these terms, and any other use is a violation of the agreement. 
+Violations may result in revocation of the agreement and prohibition from using other 
+IPUMS data. If IPUMS or our partners are harmed from your violation, you are 
+responsible for all damages, including reasonable attorney's fees and expenses.
+        
+In addition, we request that users send us a copy of any publications, research
+reports, or educational material making use of the data or documentation.
+
+Send electronic material to: nhgis@umn.edu
+
+Printed matter should be sent to:
+
+    IPUMS NHGIS
+    Institute for Social Research and Data Innovation
+    University of Minnesota
+    50 Willey Hall
+    225 19th Ave S
+    Minneapolis, MN 55455
