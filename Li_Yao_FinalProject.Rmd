@@ -31,23 +31,54 @@ library(sjlabelled)
 library(lmtest)
 ```
 
+# Table of Contents
+1. **[INTRODUCTION](#introduction)**
+    
+    1.1 [Background](#subparagraph1)
+    
+    1.2 [Research Objective](#subparagraph2)
+2. **[METHODOLOGY](#paragraph1)**
+
+    2.1 [Data Collection](#subparagraph3)
+    
+    2.2 [Data Wranling](#subparagraph4)
+    
+3. **[DESCRIPTIVE STATISTICS](#paragraph2)**
+
+    3.1 [Explanatory Variables](#subparagraph5)
+    
+    3.2 [Dependent Variables](#subparagraph6)
+    
+    3.3 [EXPLORATORY ANALYSIS](#subparagraph7)
+    
+    3.4 [ANALYSIS & VISUALIZATIONS](#subparagraph8)
+    
+4. **[SUMMARY and RESULTS](#paragraph3)**
+
+5. **[DISCUSSION](#paragraph4)**
+
+    5.1 [Conclusion](#subparagraph9)
+    
+    5.2 [Limitations](#subparagraph10)
+
+
 ```{r}
 rm(list = ls())
 ```
 
 ```{r}
 getwd()
-setwd("/Users/yaoyao/Desktop/872L_Final")
+setwd("/Users/ruiqingli/Desktop/DataAnalytics/RWORK/Li-Yao-Final-Project")
 getwd()
 ```
 
-INTRODUCTION
+#### **INTRODUCTION** <a name="introduction"></a>
 
-Background
+##### Background <a name="subparagraph1"></a>
 
 Mode choice “is the process of determining what method of travel people will use”(Allen, 2011). Previous studies have examined commuter preferences for mode choices, such as bicycling(Wardmen et al, 2007), modes of transportation against socioeconomic factors(Commins and Nolan, 2011), or satisfaction of different modes of transportation(St-Louis et al, 2014). Other studies also examine characteristics associated with land uses, proximity to public transportation and population density in relation to mode choice(Buehler, 2011). 
 
-Research Objective
+##### Research Objective <a name="subparagraph2"></a>
 
 Most studies focus on using survey methods to examine commuter behavior and decision making choice for one specific mode of transportation. This study investigates how the determinants of mode choice differ across three different modes of transportation. Incorporation of more than one mode of transportation allows for a comparison between the modes of transportation, given that all three modes of transportation are analyzed using the same method/model. Moreover, there are no existing studies of mode choice in California on the spatial granularity level of counties; therefore, our study offers a more detailed examination of what mode choice looks like in California. The main research questions of this study are:
 
@@ -58,9 +89,9 @@ Understanding drivers and key determinants that influence mode of transportation
 
 We predict that there will be a difference in determinants of mode choice between the three modes of transportation chosen in this study, given the disparate nature of the three modes of transportation chosen. We hypothesize that per capita income or education (% bachelor’s) will be most influential for mode choice: job functions that are able to be performed remotely are often associated with higher paying jobs, and these jobs often require a college degree. We also hypothesize that mode choices for bicycling and public transportation will be best predicted by metrics that characterize the demographics of a location/county. For example, we assume that higher percentages of people living and working in a principal city correlates with higher rates of public transportation use; and conversely, we predict that counties with higher percentages of white residents will have lower utilization rates of public transportation based on Pew Research polling (Anderson, 2016). Lastly, we hypothesize that weighted air quality index will have the least effect on mode choice, except for bicycling, given that poor air quality may disincentivize people from mode choices that require outdoor presence.
 
-METHODOLOGY 
+#### **METHODOLOGY** <a name="paragraph1"></a>
 
-Data Collection 
+##### Data Collection <a name="subparagraph3"></a>
 
 This study uses longitudinal data across counties in California. The state of California was chosen due to the large number of counties, thereby capturing some variation in the data collection. Secondly, California is the leading state in climate change efforts; the state has been making large strides in addressing the largest emitting sector of the state, transportation (California Energy Commission, 2022); therefore, our study can help capture trends in the sector that can be useful in future infrastructure studies aimed at transforming the transportation sector.
 The dependent variable is % population that use the following modes of transportation for commuting: (1) Public transportation, (2) Bicycle, and (3) Work from home. The three modes of transportation selected were chosen because together they represent a range in commuting distance; work from home representing zero commute distance, bicycling likely representing a smaller commute distance, and public transportation likely representing longer commute distances. The determinants/explanatory variables  investigated in this study are: air quality index, percent white population, percent bachelor’s degree, per capita income, percent living and working in a principal city, and percent population with commute travel time greater than 30 mins. 
@@ -71,7 +102,7 @@ This study acknowledges the wide land area and population variance of counties i
 
 There are a total of 58 counties in California, however due to incomplete mode choice data, this study examines 42 counties in California. The missing counties not included in this study are: Alpine, Amador, Calaveras, Colusa, Del Norte, Glenn, Inyo, Lassen, Mariposa, Modoc, Mono, Napa, Plumas, San Benito, Sierra, and Yuba.
 
-DATA WRANGLING
+##### Data Wranling <a name="subparagraph4"></a>
 
 ```{r}
 #Observe the dataset
@@ -241,8 +272,8 @@ bicycle.aq.census<- merge(bicycle.aq, us.census.ca, by="county_name")
 wfh.aq.census <- merge(wfh.aq, us.census.ca, by="county_name")
 ```
 
-DESCRIPTIVE STATISTICS
-Explanatory Variables
+#### **DESCRIPTIVE STATISTICS**<a name="paragraph2"></a>
+##### Explanatory Variables <a name="subparagraph5"></a>
 
 Since all three models utilize the same set of explanatory variables, we decided to make two tables which target the explanatory variables and the dependent variables respectively. There are 42 observations for all explanatory variables (Appendix A Figure 1). % of bachelor degree has a mean and median of 11 with a slight right skewness. All explanatory variables are right skewed except from the percent white residents. Per capita income has a mean of $28,000 and a big standard deviation of 8,600. The percentage of people living or working in a principal city has a mean of 16 and a standard deviation of 11. % of  commute time longer than 30 mins has a mean of 13 and a standard deviation of 4.6. Weighted average of the air quality index has a mean of 25 with a relatively small median of 13. The standard deviation is relatively big – 35 – when compared to its mean. Percent of white residents has a mean of 73 and a standard deviation of 12. 
 
@@ -317,7 +348,7 @@ gt() %>%
 summary.table.exp.clean
 ```
 
-Dependent Variables
+##### Dependent Variables <a name="subparagraph6"></a>
 
 For the dependent variables, they are all right skewed and % of bicycles as the transportation to work has the most right skewness (Appendix A Figure 2). % of work at home has the largest mean - 4.7 - and a standard deviation of 2.0.  % of bicycles as the transportation to work has a mean of 1.0 and a standard deviation of 1.7. % of public transportation as the transportation to work has a mean of 4.0 and a very large standard deviation of 4.4.
 
@@ -397,7 +428,7 @@ summary.table.dependent.clean
 pub.transp.aq.census
 ```
 
-EXPLORATORY ANALYSIS
+##### EXPLORATORY ANALYSIS <a name="subparagraph7"></a>
 
 Scatterplots
 Before we created our data models, we produced scatterplot matrices (Appendix A Figures 3-5) to visualize our data and inform necessary data transformations. We found that certain variables are concentrated on the x or y axis and decided  to perform  log transformation on them. Our public transportation model uses log transformed % population that uses public transportation and weighted average air quality index; our bicycle model uses log transformed % population that uses bicycles, and weighted average air quality index; and our work from home model uses log transformed weighted average air quality index. After log transformation, the scatterplots show that all variables are  distributed without concentration on a certain axis (Appendix A Figures 6-8)
@@ -476,7 +507,7 @@ ggpairs(wfh.aq.census, columns = columns.select, title = "",  axisLabels = "show
 ```
 
 
-ANALYSIS & VISUALIZATIONS
+##### ANALYSIS & VISUALIZATIONS <a name="subparagraph8"></a>
 ```{r}
 #Initial Public Transportation Model
 is.na(pub.transp.aq.census)<-sapply(pub.transp.aq.census, is.infinite) #Change infinite to NA, otherwise the linear regression doesn't work
@@ -578,7 +609,7 @@ tab_model(new.model.wfh,
   string.p = "P-Value")
 plot(new.model.wfh)
 ```
-SUMMARY and RESULTS
+#### **SUMMARY and RESULTS** <a name="paragraph3"></a>
 
 We developed ordinary least squares linear regression models to test the impact of each indicator on the percentage of California commuters across three mode choices—public transportation, bicycling, and working from home. Our final models for public transportation and bicycle utilization, found in Appendix B Figure 43 and replicated in the table below, indicate that there are different predictors of mode choice at the county-level in California. Public transportation use was best predicted by a county’s percentage of white residents and to a lesser extent, air quality; whereas bicycle use was best predicted by travel time to work. Other predictors were found to be statistically insignificant. Moreover, our working from home model did not meet the zero conditional means assumption of OLS regressions (Appendix B Figure 41) and was therefore disregarded in reporting our final findings.
 Final Models for Public Transportation and Bicycle Mode Choices
@@ -591,14 +622,14 @@ Our model for public transportation yielded a multiple R-squared value of 0.607 
 
 
 
-DISCUSSION
+#### **DISCUSSION** <a name="paragraph4"></a>
 
-Conclusion
+##### Conclusion <a name="subparagraph9"></a>
 
 We assumed that the demographic composition of California counties, represented by percent white residents, would affect public transportation adoption. We also assumed that shorter commutes would be associated with bicycle usage. Our model results were congruent with these assumptions. However, our results do not fully match our other predictions. We assumed that worse air quality, indicated by high scores on our selected air quality index, would reduce bicycle commuting. Our results indicate that air quality is not a significant predictor for bicycling, but rather, dissuades people from using public transportation.
 We also found it surprising that the percentage of people living or working in principal cities was not statistically significant in either model. We originally selected that variable as a creative way to account for population density and proximity to high quality transit infrastructure, and assumed based on our literature review that it would be significant to our models; though that assumption was ultimately moot.
 
-Limitations
+##### Limitations <a name="subparagraph10"></a>
 
 While we uncovered statistically significant findings for variables influencing transportation mode choice at the county level in California, the small coefficients of our betas indicate that there are likely more powerful drivers of public transportation beyond our selected predictor variables. This suggests the presence of omitted variable bias, particularly in our bicycle model which had a low adjusted R-squared value of 0.18.
 This study was not able to examine all variables or factors that have been demonstrated in literature to affect mode choice, for example, cost of each mode of transportation or infrastructure built to promote each mode of transit. Our study design was limited to data available on the county level in California. Integrating additional variables, like cost of mode choice, would require additional field data collection.
