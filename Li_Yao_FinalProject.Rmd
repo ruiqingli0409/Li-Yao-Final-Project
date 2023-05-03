@@ -54,7 +54,7 @@ library(lmtest)
     
 5. **[ANALYSIS & VISUALIZATIONS](#paragraph4)**
     
-6. **[SUMMARY and RESULTS](#paragraph5)**
+6. **[SUMMARY & RESULTS](#paragraph5)**
 
 7. **[DISCUSSION](#paragraph6)**
 
