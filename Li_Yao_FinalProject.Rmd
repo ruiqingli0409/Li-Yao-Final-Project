@@ -38,6 +38,7 @@ library(lmtest)
     1.1 [Background](#subparagraph1)
     
     1.2 [Research Objective](#subparagraph2)
+    
 2. **[METHODOLOGY](#paragraph1)**
 
     2.1 [Data Collection](#subparagraph3)
