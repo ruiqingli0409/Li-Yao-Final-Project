@@ -50,17 +50,17 @@ library(lmtest)
     
     3.2 [Dependent Variables](#subparagraph6)
     
-    3.3 [EXPLORATORY ANALYSIS](#subparagraph7)
+4. **[EXPLORATORY ANALYSIS](#paragraph3)**
     
-    3.4 [ANALYSIS & VISUALIZATIONS](#subparagraph8)
+5. **[ANALYSIS & VISUALIZATIONS](#paragraph4)**
     
-4. **[SUMMARY and RESULTS](#paragraph3)**
+6. **[SUMMARY and RESULTS](#paragraph5)**
 
-5. **[DISCUSSION](#paragraph4)**
+7. **[DISCUSSION](#paragraph6)**
 
-    5.1 [Conclusion](#subparagraph9)
+    7.1 [Conclusion](#subparagraph7)
     
-    5.2 [Limitations](#subparagraph10)
+    7.2 [Limitations](#subparagraph8)
 
 \newpage
 
@@ -430,7 +430,7 @@ summary.table.dependent.clean
 pub.transp.aq.census
 ```
 
-##### EXPLORATORY ANALYSIS <a name="subparagraph7"></a>
+#### **EXPLORATORY ANALYSIS** <a name="paragraph3"></a>
 
 Scatterplots
 Before we created our data models, we produced scatterplot matrices (Appendix A Figures 3-5) to visualize our data and inform necessary data transformations. We found that certain variables are concentrated on the x or y axis and decided  to perform  log transformation on them. Our public transportation model uses log transformed % population that uses public transportation and weighted average air quality index; our bicycle model uses log transformed % population that uses bicycles, and weighted average air quality index; and our work from home model uses log transformed weighted average air quality index. After log transformation, the scatterplots show that all variables are  distributed without concentration on a certain axis (Appendix A Figures 6-8)
@@ -509,7 +509,7 @@ ggpairs(wfh.aq.census, columns = columns.select, title = "",  axisLabels = "show
 ```
 
 
-##### ANALYSIS & VISUALIZATIONS <a name="subparagraph8"></a>
+#### **ANALYSIS & VISUALIZATIONS** <a name="paragraph4"></a>
 ```{r}
 #Initial Public Transportation Model
 is.na(pub.transp.aq.census)<-sapply(pub.transp.aq.census, is.infinite) #Change infinite to NA, otherwise the linear regression doesn't work
@@ -611,7 +611,7 @@ tab_model(new.model.wfh,
   string.p = "P-Value")
 plot(new.model.wfh)
 ```
-#### **SUMMARY and RESULTS** <a name="paragraph3"></a>
+#### **SUMMARY and RESULTS** <a name="paragraph5"></a>
 
 We developed ordinary least squares linear regression models to test the impact of each indicator on the percentage of California commuters across three mode choices—public transportation, bicycling, and working from home. Our final models for public transportation and bicycle utilization, found in Appendix B Figure 43 and replicated in the table below, indicate that there are different predictors of mode choice at the county-level in California. Public transportation use was best predicted by a county’s percentage of white residents and to a lesser extent, air quality; whereas bicycle use was best predicted by travel time to work. Other predictors were found to be statistically insignificant. Moreover, our working from home model did not meet the zero conditional means assumption of OLS regressions (Appendix B Figure 41) and was therefore disregarded in reporting our final findings.
 Final Models for Public Transportation and Bicycle Mode Choices
@@ -624,14 +624,14 @@ Our model for public transportation yielded a multiple R-squared value of 0.607 
 
 
 
-#### **DISCUSSION** <a name="paragraph4"></a>
+#### **DISCUSSION** <a name="paragraph6"></a>
 
-##### Conclusion <a name="subparagraph9"></a>
+##### Conclusion <a name="subparagraph7"></a>
 
 We assumed that the demographic composition of California counties, represented by percent white residents, would affect public transportation adoption. We also assumed that shorter commutes would be associated with bicycle usage. Our model results were congruent with these assumptions. However, our results do not fully match our other predictions. We assumed that worse air quality, indicated by high scores on our selected air quality index, would reduce bicycle commuting. Our results indicate that air quality is not a significant predictor for bicycling, but rather, dissuades people from using public transportation.
 We also found it surprising that the percentage of people living or working in principal cities was not statistically significant in either model. We originally selected that variable as a creative way to account for population density and proximity to high quality transit infrastructure, and assumed based on our literature review that it would be significant to our models; though that assumption was ultimately moot.
 
-##### Limitations <a name="subparagraph10"></a>
+##### Limitations <a name="subparagraph8"></a>
 
 While we uncovered statistically significant findings for variables influencing transportation mode choice at the county level in California, the small coefficients of our betas indicate that there are likely more powerful drivers of public transportation beyond our selected predictor variables. This suggests the presence of omitted variable bias, particularly in our bicycle model which had a low adjusted R-squared value of 0.18.
 This study was not able to examine all variables or factors that have been demonstrated in literature to affect mode choice, for example, cost of each mode of transportation or infrastructure built to promote each mode of transit. Our study design was limited to data available on the county level in California. Integrating additional variables, like cost of mode choice, would require additional field data collection.
